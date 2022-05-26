@@ -2,7 +2,7 @@ from email import message
 from flask import Blueprint, request, jsonify
 from  flask_jwt_extended import JWTManager, create_access_token
 from werkzeug.security import generate_password_hash
-from models import User, db
+from models import User, db, System
 
 
 auth = Blueprint("auth", __name__, url_prefix="")
@@ -11,12 +11,19 @@ auth = Blueprint("auth", __name__, url_prefix="")
 def register():
     if request.method == "POST":
         login_information = request.get_json()
-        if "email" and "password" and "confirm_password" not in login_information:
+        if "email" or "password" or "confirm_password" or 'device'not in login_information:
             return jsonify(message="Missing information"), 400
         email = login_information['email']
         password = login_information['password']
         confirm_password = login_information['confirm_password']
+        device = login_information['device']
         check_user = User.query.filter_by(email = email).first()
+        check_device = System.query.filter_by(device = device).first()
+        check_device_exist = User.query.filter_by(system_id = check_device.id).first()
+        if check_device == None:
+            return jsonify(message = "This device does not exist"), 400
+        if check_device_exist != None:
+            return jsonify(message = "This device has already been registered"), 400
         if check_user != None:
             return jsonify(message = "Email already exists"), 400
         if password != confirm_password:

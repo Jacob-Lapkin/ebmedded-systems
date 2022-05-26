@@ -25,11 +25,13 @@ def drop_db():
     with app.app_context():
         db.drop_all()
 
+
 def seed_db():
-    walle = System(number = "4xd6sg")
-    db.session.add(walle)
-    db.session.commit()
-    print("seeded database")
+    with app.app_context():
+        walle = System(number = "4xd6sg")
+        db.session.add(walle)
+        db.session.commit()
+        print("seeded database")
 
 
 # routes
