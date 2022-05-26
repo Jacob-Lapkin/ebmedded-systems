@@ -28,7 +28,7 @@ def drop_db():
 
 def seed_db():
     with app.app_context():
-        walle = System(number = "4xd6sg")
+        walle = System(device = "4xd6sg")
         db.session.add(walle)
         db.session.commit()
         print("seeded database")
@@ -40,7 +40,7 @@ def index():
     return jsonify(message = "This is a test"), 200
 
 if __name__ == "__main__":
-    app.run(debug=True, port='8080')
+    app.run(debug=True)
 
 
 
