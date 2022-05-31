@@ -1,18 +1,23 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import ForeignKey
+from flask_pymongo import PyMongo
+from marshmallow import Schema, fields
 
-db = SQLAlchemy()
+mongo = PyMongo()
 
-class System(db.Model):
-    id = db.Column(db.Integer, primary_key= True)
-    device = db.Column(db.String(255))
-    user = db.relationship("User", backref='system')
+class UserSchema(Schema):
+    _id = fields.Str()
+    email = fields.Email()
+    phone = fields.Int()
+    password = fields.Str()
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255))
-    password = db.Column(db.String(255))
-    system_id = db.Column(db.Integer, db.ForeignKey('system.id'))
+class SystemSchema(Schema):
+    _id = fields.Str()
+    device = fields.Str()
+
+usersschema = UserSchema(many = True)
+userschema = UserSchema()
+
+systemsschema = SystemSchema(many = True)
+systemschema = SystemSchema()
 
 
 
