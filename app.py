@@ -3,6 +3,8 @@ from models import mongo, userschema, usersschema, systemschema, systemsschema
 from flask_jwt_extended import JWTManager
 from view.auth import auth
 from dotenv import load_dotenv
+from flasgger import Swagger
+from swagger_template import template
 import os
 
 load_dotenv()
@@ -10,15 +12,22 @@ load_dotenv()
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "Change this later"
+
+#mongo db
 app.config["MONGO_URI"] = f'mongodb+srv://jakethenapkin:{os.getenv("password")}@cluster0.xx87xzv.mongodb.net/my_db?retryWrites=true&w=majority'
-
-
 mongo.init_app(app)
 
+#json web token
 jwt = JWTManager(app)
 
 #blueprints
 app.register_blueprint(auth)
+
+#swagger template
+
+swagger = Swagger(app, template=template)
+
+
 
 
 # routes

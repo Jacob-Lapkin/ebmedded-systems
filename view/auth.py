@@ -2,8 +2,10 @@ from email import message
 from venv import create
 from flask import Blueprint, request, jsonify
 from  flask_jwt_extended import JWTManager, create_access_token
+from marshmallow import ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import mongo, userschema, usersschema
+from bson import json_util
 
 
 auth = Blueprint("auth", __name__, url_prefix="")
@@ -20,10 +22,11 @@ def register():
         device = login_information['device']
         check_device = mongo.db.systems.find_one({'device':device})
         check_user = mongo.db.user.find_one({"email":email})
-
-        check_device_exist = mongo.db.user.find_one({"system_id":check_device['_id']})
-        if not check_device:
+        try:
+            loaded_check = json_util.dumps(check_device["_id"])
+        except TypeError:
             return jsonify(message = "This device does not exist"), 400
+        check_device_exist = mongo.db.user.find_one({"system_id":loaded_check})
         if check_device_exist != None:
             return jsonify(message = "This device has already been registered"), 400
         if check_user != None:
@@ -31,7 +34,12 @@ def register():
         if password != confirm_password:
             return jsonify(message="Passwords do not match"), 400
         hashed_password = generate_password_hash(password)
-        new_user = mongo.db.user.insert_one({"email": email, "password":hashed_password, "system_id":check_device['_id']})
+        try:
+            system_id = json_util.dumps(check_device['_id'])
+            loaded_user = userschema.load({"email": email, "password":hashed_password, "system_id":system_id})
+        except ValidationError:
+            return jsonify(message="Did not supply correct data types"), 400
+        new_user = mongo.db.user.insert_one(loaded_user)
         return jsonify(message = "user created"), 201
 
 @auth.route("/login", methods=["POST", "GET"])
