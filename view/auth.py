@@ -43,7 +43,7 @@ def register():
         new_user = mongo.db.user.insert_one(loaded_user)
         return jsonify(message = "user created"), 201
 
-@auth.route("/login", methods=["POST", "GET"])
+@auth.route("/login", methods=["POST"])
 def login():
     if request.method == "POST":
         login_data = request.get_json()

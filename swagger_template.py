@@ -84,6 +84,32 @@ template ={
                     }
                 ]
                 }
+            },"/login": {
+                "post": {
+                    "description":"User Login",
+                    "responses":{
+                        "200":{
+                            "description":"Logged in successfully",
+                            "content": {
+                                "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                                }
+                            }
+                        }, 
+                        "400":{
+                            "description":"Logged in unsuccessfully",
+                            "content": {
+                                "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             }
 } 
