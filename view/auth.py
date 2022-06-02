@@ -13,6 +13,7 @@ auth = Blueprint("auth", __name__, url_prefix="")
 @auth.route("/register", methods=["POST"])
 def register():
     if request.method == "POST":
+        print("requested")
         login_information = request.get_json()
         if "email" not in login_information.keys() or "password" not in login_information.keys() or "confirm_password" not in login_information.keys() or 'device'not in login_information.keys():
             return jsonify(message="Missing information"), 400

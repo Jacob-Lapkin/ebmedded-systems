@@ -31,7 +31,7 @@ template ={
                             }
                         },
                         "400":{
-                            "description": "Registration unsuccesful.",
+                            "description": "Registration unsuccessful.",
                             "content": {
                                 "application/json": {
                                 "schema": {
@@ -47,7 +47,7 @@ template ={
                                 "type":"object",
                                 "properties":{
                                     "email":{
-                                        "type":"string"
+                                        "type":"string",
                                     },
                                     "password":{
                                         "type":"string"
@@ -57,7 +57,7 @@ template ={
                                     },
                                     "device":{
                                         "type":"string"
-                                    }
+                                    },
                                 }
                             },
                                 "required": ["email", "password", "confirm_password", "device"] 
@@ -66,43 +66,20 @@ template ={
                     }
                 }, "parameters": [
                     {
-                    "name": "email",
-                    "in": "path",
-                    "description": "email address to register",
+                    "name": "User",
+                    "in": "body",
+                    "description": "User to register",
                     "required": True,
                     "schema": {
-                        "type": "string"
-                    },
-                    "style": "simple"
-                    },
-                    {
-                    "name": "password",
-                    "in": "path",
-                    "description": "password to register",
-                    "required": True,
-                    "schema": {
-                        "type": "string"
-                    },
-                    "style": "simple"
-                    },
-                    {
-                    "name": "confirm_password",
-                    "in": "path",
-                    "description": "confirm your password",
-                    "required": True,
-                    "schema": {
-                        "type": "string"
-                    },
-                    "style": "simple"
-                    },
-                    {
-                    "name": "device",
-                    "in": "path",
-                    "description": "This is the code that comes with your device",
-                    "required": True,
-                    "schema": {
-                        "type": "string"
-                    },
+                        "type": "object",
+                        "example":"""
+{
+"email":"jacobglapkin@gmail.com",
+"password":"asdfgh",
+"confirm_password":"asdfgh",
+"device":"a3xh23"
+}"""                 
+                        },
                     "style": "simple"
                     }
                 ]
