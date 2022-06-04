@@ -1,7 +1,7 @@
 from email import message
 from venv import create
 from flask import Blueprint, request, jsonify
-from  flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import JWTManager, create_access_token
 from marshmallow import ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import mongo, userschema, usersschema
@@ -24,10 +24,10 @@ def register():
         check_device = mongo.db.systems.find_one({'device':device})
         check_user = mongo.db.user.find_one({"email":email})
         try:
-            loaded_check = json_util.dumps(check_device["_id"])
+            system_id = json_util.dumps(check_device["_id"])
         except TypeError:
             return jsonify(message = "This device does not exist"), 400
-        check_device_exist = mongo.db.user.find_one({"system_id":loaded_check})
+        check_device_exist = mongo.db.user.find_one({"system_id":system_id})
         if check_device_exist != None:
             return jsonify(message = "This device has already been registered"), 400
         if check_user != None:
@@ -36,7 +36,6 @@ def register():
             return jsonify(message="Passwords do not match"), 400
         hashed_password = generate_password_hash(password)
         try:
-            system_id = json_util.dumps(check_device['_id'])
             loaded_user = userschema.load({"email": email, "password":hashed_password, "system_id":system_id})
         except ValidationError:
             return jsonify(message="Did not supply correct data types"), 400

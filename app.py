@@ -5,6 +5,7 @@ from view.auth import auth
 from dotenv import load_dotenv
 from flasgger import Swagger
 from swagger_template import template
+from view.security import security
 import os
 
 load_dotenv()
@@ -22,6 +23,7 @@ jwt = JWTManager(app)
 
 #blueprints
 app.register_blueprint(auth)
+app.register_blueprint(security)
 
 #swagger template
 

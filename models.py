@@ -4,7 +4,7 @@ from marshmallow import Schema, fields
 mongo = PyMongo()
 
 class UserSchema(Schema):
-    _id = fields.Str(required=False)
+    _id = fields.Str()
     email = fields.Email()
     password = fields.Str()
     system_id = fields.Str()
