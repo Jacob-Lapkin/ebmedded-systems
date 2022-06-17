@@ -3,6 +3,7 @@ from venv import create
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token
 from marshmallow import ValidationError
+from pkg_resources import require
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import mongo, userschema, usersschema
 from bson import json_util
@@ -15,9 +16,12 @@ def register():
     if request.method == "POST":
         print("requested")
         login_information = request.get_json()
-        if "email" not in login_information.keys() or "password" not in login_information.keys() or "confirm_password" not in login_information.keys() or 'device'not in login_information.keys():
-            return jsonify(message="Missing information"), 400
+        required_info = ["password", "confirm_password", "email", "device", "phone"]
+        for key, value in login_information.items():
+            if key not in required_info:
+                return jsonify(message = "Incorrect data passed"), 400
         email = login_information['email']
+        phone = login_information['phone']
         password = login_information['password']
         confirm_password = login_information['confirm_password']
         device = login_information['device']
@@ -36,7 +40,7 @@ def register():
             return jsonify(message="Passwords do not match"), 400
         hashed_password = generate_password_hash(password)
         try:
-            loaded_user = userschema.load({"email": email, "password":hashed_password, "system_id":system_id})
+            loaded_user = userschema.load({"email": email, "phone": phone,"password":hashed_password, "system_id":system_id})
         except ValidationError:
             return jsonify(message="Did not supply correct data types"), 400
         new_user = mongo.db.user.insert_one(loaded_user)

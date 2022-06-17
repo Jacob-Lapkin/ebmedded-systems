@@ -6,6 +6,7 @@ mongo = PyMongo()
 class UserSchema(Schema):
     _id = fields.Str()
     email = fields.Email()
+    phone = fields.Int()
     password = fields.Str()
     system_id = fields.Str()
 

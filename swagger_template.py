@@ -108,7 +108,41 @@ template ={
                                 }
                             }
                         }
+                    },"requestBody": {
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type":"object",
+                                "properties":{
+                                    "email":{
+                                        "type":"string",
+                                    },
+                                    "password":{
+                                        "type":"string"
+                                    }
+                                }
+                            },
+                                "required": ["email", "password"] 
+
+                        }
                     }
+                },"parameters": [
+                    {
+                    "name": "User",
+                    "in": "body",
+                    "description": "User to Login",
+                    "required": True,
+                    "schema": {
+                        "type": "object",
+                        "example":"""
+{
+"email":"jacobglapkin@gmail.com",
+"password":"asdfgh",
+}"""                 
+                        },
+                    "style": "simple"
+                    }
+                ]
                 }
             }
             }
