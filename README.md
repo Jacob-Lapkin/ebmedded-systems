@@ -7,6 +7,7 @@ Here are a few of the many frameworks/tools that were needed in building the pro
 - MongoDB
 - Twilio
 - Mailgun
+- OpenAPI
 
 ## Getting started
 Let's get you up to speed.
