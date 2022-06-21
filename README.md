@@ -8,6 +8,7 @@ Here are a few of the many frameworks/tools that were needed in building the pro
 - Twilio
 - Mailgun
 - OpenAPI
+- Docker
 
 ## Getting started
 Let's get you up to speed.
