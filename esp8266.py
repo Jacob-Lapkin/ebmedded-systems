@@ -1,8 +1,10 @@
-rom machine import Pin
+from machine import Pin, SoftI2C
 import utime
 import network
 import time
+import ssd1306
 
+utime.sleep(2)
 
 # __________________________________________________________________
 __version__ = '0.2.0'
@@ -239,18 +241,54 @@ def do_connect():
 # connect to wifi
 do_connect()
 
+# initialize oled display
+i2c = SoftI2C(scl=Pin(5), sda=Pin(4))
+
+oled_width = 128
+oled_height = 64
+oled = ssd1306.SSD1306_I2C(oled_width, oled_height, i2c)
+
+
 
 while True:
+    oled.fill(0)
+    hold = 0
     led.value(1)
     distance = sensor.distance_cm()
     utime.sleep(.15)
     led.value(0)
     utime.sleep(.15)
     print('Distance:', distance, 'cm')
-    if distance <= 20:
-        print("less")
+    oled.text('Alert For You', 0, 0)
+    oled.text('Alert is active', 0, 20)
+    oled.show()
+    while distance < 5:
+        oled.fill(0)
+        led.value(1)
+        hold += 1
+        utime.sleep(1)
+        seconds_left = 20 - hold
+        timer = "activate in: {}".format(str(seconds_left))
+        print(timer)
+        oled.text(timer, 0, 20)
+        oled.show()
+
+        if hold == 20:
+            distance = 150
+    if distance <= 30 and distance >= 5:
+        oled.fill(0)
+        led.value(0)
+        print("Door has opened")
+        oled.text("Door has opened", 0, 20)
+        oled.show()
         post_data = {"device":device}
         post(url, headers = {'content-type': 'application/json'}, json = post_data)
-        print("send alert")
+        print("Alert sent")
+        oled.fill(0)
+        oled.text("Alert sent", 0, 20)
+        oled.show()
         utime.sleep(20)
+    
+    
+
     
